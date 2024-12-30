@@ -1,15 +1,18 @@
 import openai
+from src.config import settings
 
 
 class LLMService:
-    def __init__(self, model_name: str = "gpt-3.5-turbo"): #TODO pass api key here
+    def __init__(self, api_key: str, model_name: str = "gpt-3.5-turbo"):
         """
         Initializes the LLMService with the specified OpenAI model.
 
         Parameters:
+        api_key (str): Your OpenAI API key.
         model_name (str): The name of the OpenAI model to use. Defaults to 'gpt-3.5-turbo'.
         """
         self.model_name = model_name
+        openai.api_key = api_key  # Correct way to set the API key
 
     def answer_query(self, query: str) -> str:
         """
@@ -22,7 +25,7 @@ class LLMService:
         str: The model's response to the query.
         """
         try:
-            response = openai.ChatCompletion.create(
+            response = openai.ChatCompletion.create(  # Correct API usage
                 model=self.model_name,
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
@@ -33,9 +36,3 @@ class LLMService:
             return response["choices"][0]["message"]["content"].strip()
         except Exception as e:
             return f"An error occurred: {str(e)}"
-
-
-if __name__ == "__main__":
-    service = LLMService()
-    response = service.answer_query("What is the capital of France?")
-    print(response)

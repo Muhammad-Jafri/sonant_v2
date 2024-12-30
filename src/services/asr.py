@@ -27,7 +27,8 @@ class ASRService:
         # Initialize tokenizer and model
         try:
             self.processor = AutoProcessor.from_pretrained(model_path)
-            self.model = OVModelForSpeechSeq2Seq.from_pretrained(model_path)
+            self.model = OVModelForSpeechSeq2Seq.from_pretrained(
+                model_path, export=True)
         except Exception as e:
             raise RuntimeError(f"Failed to load model and tokenizer: {str(e)}")
 
@@ -57,7 +58,8 @@ class ASRService:
             ).input_features
 
             # Generate transcription
-            outputs = self.model.generate(input_features)  # TODO fix this tomorrow
+            outputs = self.model.generate(
+                input_features)  # TODO fix this tomorrow
 
             # Decode the outputs
             transcribed_text = self.processor.batch_decode(outputs)[0]
@@ -99,7 +101,8 @@ class ASRService:
             return audio_array
 
         except Exception as e:
-            raise ValueError(f"Failed to convert base64 to audio array: {str(e)}")
+            raise ValueError(
+                f"Failed to convert base64 to audio array: {str(e)}")
 
     def __call__(self, audio_base64: str) -> str:
         """

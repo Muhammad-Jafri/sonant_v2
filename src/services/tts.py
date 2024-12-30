@@ -1,7 +1,6 @@
 import wave
 import base64
 from piper.voice import PiperVoice
-from app.utils.time_decorator import measure_time
 
 
 class TTSService:
@@ -9,7 +8,6 @@ class TTSService:
         self.model_path = model_path
         self.voice = PiperVoice.load(model_path)
 
-    @measure_time
     def generate_audio(self, text: str):
         clean_text = self.preprocess_text(text)
         temp_wav_file = wave.open("output.wav", "w")
@@ -51,4 +49,3 @@ class TTSService:
 
     def __call__(self, *args, **kwargs):
         pass
-
